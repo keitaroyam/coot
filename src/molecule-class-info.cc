@@ -6651,15 +6651,10 @@ molecule_class_info_t::save_molecule_filename(const std::string &dir) {
       // convert "/" to "_"
       int slen = clean_name.length();
       for (int i=0; i<slen; i++)
-#if defined(__WIN32__) || defined(__CYGWIN__) || defined(WINDOWS_MINGW)
 // BL says: we change /, \ and : to _ in windows
          if (clean_name[i] == '/' || clean_name[i] == '\\'
                              || clean_name[i] == ':')
             clean_name[i] = '_';
-#else
-	 if (clean_name[i] == '/')
-	    clean_name[i] = '_';
-#endif // win32 things
 
       time_string += clean_name;
       time_string += "_";
@@ -6674,7 +6669,7 @@ molecule_class_info_t::save_molecule_filename(const std::string &dir) {
       time_t t;
       time(&t);
       char *chars_time = ctime(&t);
-#ifdef WINDOWS_MINGW
+
 // BL says: why not? We can fix this. I show you how it's done in MINGW:
 // dunno if it works in other win32 systems. Havent checked
 // we just convert the : to _
@@ -6683,7 +6678,7 @@ molecule_class_info_t::save_molecule_filename(const std::string &dir) {
              chars_time[i] = '_';
          }
       }
-#endif // MINGW
+
       time_string += chars_time;
 #endif // other WIN32
 
@@ -6702,13 +6697,11 @@ molecule_class_info_t::save_molecule_filename(const std::string &dir) {
 
       // convert : to underscores in windows
       //
-#ifndef WINDOWS_MINGW
       // BL say: nonsense since we would transform the directory C: here.
       // we have done it before already
       for (int i=0; i<time_string.length(); i++)
 	 if (time_string[i] == ':')
 	    time_string[i] = '_';
-#endif // MINGW
 #endif // other win32
 
       time_string += "_modification_";
